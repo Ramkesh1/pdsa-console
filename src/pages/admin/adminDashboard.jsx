@@ -5,8 +5,8 @@ import Total from "../../Assets/images/total.png";
 import Delivered from "../../Assets/images/delivered.png";
 import Failed from "../../Assets/images/failed.png";
 import Read from "../../Assets/images/read.png";
-import { apiCall } from "../../services/authServieces"; // Assuming this is your API service for making requests
-
+import { apiCall } from "../../services/authServieces"; 
+import Loader from "../../components/Loader";
 const AdminDashboard = () => {
   // State to hold count data
   const [dashboardData, setDashboardData] = useState({
@@ -15,6 +15,7 @@ const AdminDashboard = () => {
     sentThisMonth: 0,
     pendingSms: 0,
   });
+  const [loading, setLoading] = useState(true);
 
   const fetchDashboardData = async () => {
     try {
@@ -28,8 +29,8 @@ const AdminDashboard = () => {
         setDashboardData({
           sentToday: response.data[0].today_video_send_count || 0,
           sentThisWeek: response.data[0].week_video_send_count || 0,
-          sentThisMonth: response.data[0].week_video_send_count || 0,
-          pendingSms: response.data[0].week_video_send_count || 0,
+          sentThisMonth: response.data[0].last_15_days_video_send_count || 0,
+          pendingSms: response.data[0].month_video_send_count || 0,
           sentTodayFeedback: response.data[0].today_video_send_count || 0,
           sentThisWeekFeedback: response.data[0].week_video_send_count || 0,
           sentThisMonthFeedback: response.data[0].week_video_send_count || 0,
@@ -38,6 +39,8 @@ const AdminDashboard = () => {
       }
     } catch (error) {
       console.error("Error fetching dashboard data", error);
+    }finally {
+      setLoading(false); 
     }
   };
   // Fetch data on component load
@@ -49,6 +52,9 @@ const AdminDashboard = () => {
 
   return (
     <>
+    {loading ? (
+        <Loader /> 
+      ) : (
       <div className="Dashboard_contain">
         <h4 className="Head_title">
           Admin Dashboard
@@ -58,41 +64,47 @@ const AdminDashboard = () => {
          
 
           <div className="row">
-            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+            <div className="col-xl-3 col-lg-3 col-md-3 col-sm-6">
               <TodayCard
                 className="Today_card_img bg_submission"
-                data={` Vedio ${dashboardData.sentToday} | Feedback ${dashboardData.sentTodayFeedback}`} 
-                header="Vedio Feedback  Today"
-                src={Total}
+                // data={` Video ${dashboardData.sentToday} | Feedback ${dashboardData.sentTodayFeedback}`} 
+                data={`${dashboardData.sentToday}`} 
+                header=" Whatsapp  Sent (Today)"
+                // src={Total}
+                 cardClass="card-today"
               />
             </div>
-            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+            <div className="col-xl-3 col-lg-3 col-md-3 col-sm-6">
               <TodayCard
                 className="Today_card_img bg_delivered"
-                data={ `Vedio  ${dashboardData.sentThisWeek} | Feedback ${dashboardData.sentThisWeekFeedback}`} // Set data dynamically from API
-                header="Vedio Feedback Send This Week"
-                src={Delivered}
+                data={ `${dashboardData.sentThisWeek}`} // Set data dynamically from API
+                header=" Whatsapp  Sent (This Week)"
+                // src={Delivered}
+                cardClass="card-week"
               />
             </div>
-            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+            <div className="col-xl-3 col-lg-3 col-md-3 col-sm-6">
               <TodayCard
                 className="Today_card_img bg_failed"
-                data={ ` Vedio  ${dashboardData.sentThisMonth} | Feedback ${dashboardData.sentThisMonthFeedback}`} // Set data dynamically from API
-                header="Vedio Feedback  Sent Last >15 Days"
-                src={Failed}
+                data={ `${dashboardData.sentThisMonth} `} // Set data dynamically from API
+                header=" Whatsapp  Sent (Last 15 Days)"
+                // src={Failed}
+                cardClass="card-month"
               />
             </div>
-            <div className="col-xl-6 col-lg-6 col-md-6 col-sm-6">
+            <div className="col-xl-3 col-lg-3 col-md-3 col-sm-6">
               <TodayCard
                 className="Today_card_img bg_pending"
-                data={`Vedio ${dashboardData.pendingSms} | Feedback ${dashboardData.pendingSmsFeedback}`} // Set data dynamically from API
-                header="Vedio Feedback  Sent This Month"
-                src={Read}
+                data={`${dashboardData.pendingSms} `} // Set data dynamically from API
+                header=" Whatsapp  Sent (This Month)"
+                // src={Read}
+                 cardClass="card-pending"
               />
             </div>
           </div>
         </div>
       </div>
+      )}
     </>
   );
 };

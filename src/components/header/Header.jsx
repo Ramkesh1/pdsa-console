@@ -14,6 +14,8 @@ import { Me } from "../../services/authServieces";
 import PersonIcon from '@mui/icons-material/Person';
 import KeyIcon from '@mui/icons-material/Key';
 import LogoutIcon from '@mui/icons-material/Logout';
+import walletIcon from "../../Assets/images/wallet.png";
+
 
 
 // ... other imports
@@ -23,6 +25,7 @@ const Header = () => {
   const [balance, setBalance] = useState('0');
   const [Inter, setInter] = useState('0');
   const [Button, setButton] = useState('0');
+
   
   const [profile, setProfile] = useState({ image: "" });
   
@@ -36,7 +39,7 @@ const Header = () => {
   const dropdownRef = useRef(null); // Create a ref for the dropdown
 
   useEffect(() => {
-    // Balancefunc();
+    Balancefunc();
     
     const fetchData = async () => {
       try {
@@ -68,18 +71,19 @@ const Header = () => {
     };
   }, []);
 
-  // const Balancefunc = async () => {
-  //   try {
-  //     const response = await apiCall({ endpoint: 'api/wp_balance_header', method: 'get' });
-  //     if (response.data) {
-  //       setBalance(response.data.balance);
-  //       setInter(response.data.inter_bal);
-  //       setButton(response.data.button_bal);
-  //     }
-  //   } catch (err) {
-  //     console.log('no amount found');
-  //   }
-  // };
+  const Balancefunc = async () => {
+    try {
+      const response = await apiCall({ endpoint: 'admin/pdsa_balance_header', method: 'post' });
+     
+      if (response.balance) {
+        setBalance(response.balance);
+  
+        setButton(response.balance);
+      }
+    } catch (err) {
+      console.log('no amount found');
+    }
+  };
 
   const handleLogOut = () => {
     localStorage.removeItem("user-cred");
@@ -114,6 +118,15 @@ const Header = () => {
             </button>
           </div>
 
+          {/* <div className="Header_content admin_nav_item">
+            
+            <p>
+             <img src={walletIcon} className="WalletIcon" alt="wallet icon" /> : <span>{balance} ₹</span>
+            </p>
+          </div> */}
+          <div div className="right_header">
+          
+
           <div className="Header_content admin_nav_item">
             {/* <p>
               National Balance : <span>{balance}</span>
@@ -122,7 +135,7 @@ const Header = () => {
               International Balance : <span>{Inter}</span>
             </p> */}
             <p>
-             Balance : <span>{Button}</span>
+             <img src={walletIcon} className="WalletIcon" alt="wallet icon" /> : <span>{balance} ₹</span>
             </p>
           </div>
           <div className="Header_end" ref={dropdownRef}>
@@ -139,6 +152,8 @@ const Header = () => {
               <button onClick={handleLogOut}> <LogoutIcon /> Logout</button>
             </div>
           </div>
+          </div>
+          
         </div>
       </header>
     </>

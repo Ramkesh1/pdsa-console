@@ -5,6 +5,8 @@ import "../../css/wb_template.css";
 import TablePagination from "@mui/material/TablePagination";
 import excel from '../../Assets/images/excel.png'
 import search from '../../Assets/images/search.png'
+import Loader from "../../components/Loader"
+
 
 const DealerDetailsPageregion = () => {
   const [data, setData] = useState([]);
@@ -45,16 +47,17 @@ const DealerDetailsPageregion = () => {
 
   // Retrieve fromdate and todate passed via state
   const stateDates = location.state || {};
-  useEffect(() => {
-    if (stateDates.fromdate) setFromDate(stateDates.fromdate);
-    if (stateDates.todate) setToDate(stateDates.todate);
-  }, [stateDates]);
+  // useEffect(() => {
+   
+  // }, [stateDates]);
 
   // Fetch all dealer details
   const fetchDealerDetails = async () => {
     setLoading(true);
     setError(null);
-    try {
+
+    
+    try { 
       const response = await apiCall({
         endpoint: `admin/getDealerDetailsRegion?page=${page + 1}&limit=${rowsPerPage}`,
         method: "post",
@@ -69,11 +72,11 @@ const DealerDetailsPageregion = () => {
       });
 
       setData(response.data || []);
-      console.log('response: ', response.data[0].video_send_count);
-      const totalItems = response.data?.length || 0; // Total items in the response
-   
-console.log(response.data,'response.data[0].video_send_count');
-      setTotalPages(response.data[0].video_send_count || 0); // Calculate total pages based on data length
+      
+      const totalItems = response.total || 0; // Total items in the response
+      
+
+      setTotalPages(totalItems || 0); // Calculate total pages based on data length
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch data");
     } finally {
@@ -82,8 +85,10 @@ console.log(response.data,'response.data[0].video_send_count');
   };
 
   useEffect(() => {
+    if (stateDates.fromdate) setFromDate(stateDates.fromdate);
+    if (stateDates.todate) setToDate(stateDates.todate);
     fetchDealerDetails();
-  }, [page, rowsPerPage, fromdate, todate]);
+  }, [page, rowsPerPage]);
 
 
   const handleChangePage = (event, newPage) => {
@@ -157,6 +162,20 @@ console.log(response.data,'response.data[0].video_send_count');
 
 
 
+    // utils.js
+ function formatDate(dateString) {
+  if (!dateString) return "N/A"; // अगर डेट null या undefined है
+  const dateObj = new Date(dateString);
+  if (isNaN(dateObj)) return "Invalid Date"; // अगर डेट वैलिड नहीं है
+
+  const day = String(dateObj.getDate()).padStart(2, "0");
+  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+  const year = dateObj.getFullYear();
+
+  return `${day}-${month}-${year}`; // DD-MM-YYYY फॉर्मेट
+}
+
+
   return (
     <div className="Template_id_contian1">
       <h4 className="Head_titleTemplate">
@@ -190,7 +209,7 @@ console.log(response.data,'response.data[0].video_send_count');
      
       </div> */}
 
-        Dealer Details ( Region: {zone || "All Zones"} )
+Dealer Details (Zone: {zone === "total" ? "Total" : (zone || "All Zones")})
         {/* <button className="btn btn-primary p-2 " onClick={exportToCSV}>Export to CSV</button>  */}
         <div onClick={exportToCSV} className="excel_img_btn" ><img src={excel} /></div>
       </h4>
@@ -200,7 +219,7 @@ console.log(response.data,'response.data[0].video_send_count');
 
           {/* <center> <h4>Region: {zone || "All Zones"}</h4></center> */}
 
-          {loading && <p>Loading...</p>}
+          {loading && <Loader />}
           {error && <p style={{ color: "red" }}>{error}</p>}
 
           {!loading && !error && (
@@ -232,10 +251,10 @@ console.log(response.data,'response.data[0].video_send_count');
                       <td>{item.region}</td>
                       <td>{item.dealer_code}</td>
 
-                      <td>{item.cdate}</td>
+                      <td> {formatDate(item.cdate)}   </td>
                       <td>{item.ctime}</td>
                       <td>{item.dealer_name}</td>
-                      <td>{item.dealer_type}</td>
+                      <td>{item.network_type}</td>
                       <td>{item.Dealer_State}</td>
                       <td>{item.Dealer_City}</td>
                       <td>{item.model_name}</td>
@@ -244,7 +263,7 @@ console.log(response.data,'response.data[0].video_send_count');
                       <td>{item.feedback_answer3 || "-"}</td>
                       <td>{item.feedback_answer4 || "-"}</td>
                       <td>{item.feedback_answer5 || "-"}</td>
-                      <td>{item.feedback_date || "-"}</td>
+                      <td>{formatDate(item.feedback_date) || "-"}</td>
                     </tr>
                   ))
                 ) : (

@@ -23,7 +23,7 @@ const AdminSidebar = () => {
       <div className="Sidebar_head">
         {/* <NavLink to="#"><img src={SmsIcon} alt="img" /></NavLink> */}
         <NavLink to="#"><img src={Logo} alt="img" /></NavLink>
-        <NavLink to="#">SMSCOUNTER</NavLink>
+        <NavLink to="#">ISLY</NavLink>
         <button id="Menu_close" onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}><img src={CloseIcon} alt="img" /></button>
       </div>
       <div className="Sidebar_contain">
@@ -110,32 +110,25 @@ const AdminSidebar = () => {
             </div>
 
 
-            <div id="Dropdown_4" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+            {/* <div id="Dropdown_4" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
               <div className="accordion-body">
                 <NavLink to="/CompleteCampaign" className={({ isActive }) => isActive ? 'active' : ''}>
                   <img src={List} alt="img" />MIS Report Wise
                 </NavLink>
               </div>
-            </div>
+            </div> */}
           </div>
 
           
-
-
-          {/* <div className="accordion-item">
+          <div className="accordion-item">
             <h2 className="accordion-header">
-              <button className={`accordion-button collapsed ${isActivePath('/admin/transaction-details') ? 'active' : ''}`} type="button" data-bs-toggle="collapse" data-bs-target="#Dropdown_2" aria-expanded="false" aria-controls="Dropdown_2">
+              <NavLink to="/transaction_details">
+                <button className={`accordion-button bg_none collapsed ${isActivePath('/transaction_details') ? '' : ''}`} type="button">
                 <img src={wellet} alt="img" /> <span>Transaction</span>
-              </button>
+                </button>
+              </NavLink>
             </h2>
-            <div id="Dropdown_2" className="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-              <div className="accordion-body">
-                <NavLink to="/TransactionDetails" className={({ isActive }) => isActive ? 'active' : ''}>
-                  <img src={List} alt="img" />Walet
-                </NavLink>
-              </div>
-            </div>
-          </div> */}
+          </div>
 
 
 

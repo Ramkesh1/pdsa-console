@@ -12,10 +12,14 @@
 }
 
 .header_f {
-    display: flex;
-    align-items: center;
+position: relative;
     margin-bottom: 1.5rem;
-    justify-content: space-between;
+  
+}
+#google_translate_element{
+    position: absolute;
+    right: 10px;
+    top: 0;
 }
 
 .logo_f {
@@ -29,6 +33,7 @@
     color: red;
     margin-left: 1rem;
     text-decoration: underline;
+    text-align: center;
 }
 
 .language-selector {
@@ -325,6 +330,17 @@
 @media (max-width: 768px) {
     .title {
         font-size: 22px;
+    }#google_translate_element.google-translate-container{
+        position: initial;
+      margin: auto;
+    }.header_f{
+        display: flex;
+        flex-direction: column;
+        justify-self: center;
+    }.language-selector{
+        align-items: center;
+        justify-content: center;
+        margin: auto;
     }
 }
 

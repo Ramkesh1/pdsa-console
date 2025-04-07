@@ -52,10 +52,9 @@ const DealerDetailsPage = () => {
 
   // Retrieve fromdate and todate passed via state
   const stateDates = location.state || {};
-  useEffect(() => {
-    if (stateDates.fromdate) setFromDate(stateDates.fromdate);
-    if (stateDates.todate) setToDate(stateDates.todate);
-  }, [stateDates]);
+  // useEffect(() => {
+  
+  // }, [stateDates]);
 
   // Fetch dealer details with pagination and date filtering
   const fetchDealerDetails = async () => {
@@ -74,7 +73,7 @@ const DealerDetailsPage = () => {
         },
       });
 
-      console.log("API Response: ", response.data);
+     
       setData(response.data || []);
       setTotalItems(response.count_total || 0); // Set total items for pagination
     } catch (err) {
@@ -86,6 +85,8 @@ const DealerDetailsPage = () => {
 
   // Trigger data fetch on page load, date change, or pagination changes
   useEffect(() => {
+    if (stateDates.fromdate) setFromDate(stateDates.fromdate);
+    if (stateDates.todate) setToDate(stateDates.todate);
     fetchDealerDetails();
   }, [page, rowsPerPage, fromdate, todate]);
 
@@ -166,6 +167,20 @@ const DealerDetailsPage = () => {
     document.body.removeChild(link);
   };
 
+
+  function formatDate(dateString) {
+    if (!dateString) return "N/A"; // अगर डेट null या undefined है
+    const dateObj = new Date(dateString);
+    if (isNaN(dateObj)) return "Invalid Date"; // अगर डेट वैलिड नहीं है
+  
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const year = dateObj.getFullYear();
+  
+    return `${day}-${month}-${year}`; // DD-MM-YYYY फॉर्मेट
+  }
+
+
   return (
     <div className="Template_id_contian1">
       <h4 className="Head_titleTemplate">
@@ -199,7 +214,8 @@ const DealerDetailsPage = () => {
         </div>
 
 
-        Dealer Details ( Zone: {zone || "All Zones"} )
+       Dealer Details (Zone: {zone === "total" ? "Total" : (zone || "All Zones")})
+
         {/* <button className="btn btn-primary p-2 " onClick={exportToCSV}>Export to CSV</button>  */}
         <div onClick={exportToCSV} className="excel_img_btn" ><img src={excel} /></div>
       </h4>
@@ -219,7 +235,6 @@ const DealerDetailsPage = () => {
                 <tr>
                   <th>Zone</th>
                   <th>Dealer Code</th>
-                  <th>Video Send Count</th>
                   <th>Creation Date</th>
                   <th>Creation Time</th>
                   <th>Dealer Name</th>
@@ -241,11 +256,10 @@ const DealerDetailsPage = () => {
                     <tr key={index}>
                       <td>{item.zone}</td>
                       <td>{item.dealer_code}</td>
-                      <td>{item.video_send_count}</td>
-                      <td>{item.cdate}</td>
+                      <td> {formatDate(item.cdate)} </td>
                       <td>{item.ctime}</td>
                       <td>{item.dealer_name}</td>
-                      <td>{item.dealer_type}</td>
+                      <td>{item.network_type}</td>
                       <td>{item.Dealer_State}</td>
                       <td>{item.Dealer_City}</td>
                       <td>{item.model_name}</td>
@@ -254,7 +268,7 @@ const DealerDetailsPage = () => {
                       <td>{item.feedback_answer3 || "-"}</td>
                       <td>{item.feedback_answer4 || "-"}</td>
                       <td>{item.feedback_answer5 || "-"}</td>
-                      <td>{item.feedback_date || "-"}</td>
+                      <td>{formatDate(item.feedback_date) || "-"}</td>
                     </tr>
                   ))
                 ) : (
