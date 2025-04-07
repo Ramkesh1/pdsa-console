@@ -283,7 +283,8 @@ const CompeleteCampaign = () => {
                   );
                 })}
                 <tr className="font-weight-bold">
-                  <td><b>Total</b></td>
+                <td><b>
+                Total</b></td>
                   <td>
 
                     <button

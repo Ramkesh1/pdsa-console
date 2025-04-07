@@ -46,8 +46,7 @@ const DealerDetailsPageregion = () => {
   // Retrieve fromdate and todate passed via state
   const stateDates = location.state || {};
   // useEffect(() => {
-  //   if (stateDates.fromdate) setFromDate(stateDates.fromdate);
-  //   if (stateDates.todate) setToDate(stateDates.todate);
+   
   // }, [stateDates]);
 
   // Fetch all dealer details
@@ -102,7 +101,7 @@ const Getdatetodata = async () => {
 
   useEffect(() => {
     if (stateDates.fromdate) setFromDate(stateDates.fromdate);
-    if (stateDates.todate) setToDate(stateDates.todate)
+    if (stateDates.todate) setToDate(stateDates.todate);
     fetchDealerDetails();
   }, [page, rowsPerPage]);
 
@@ -211,7 +210,7 @@ const Getdatetodata = async () => {
      
       </div> */}
 
-Dealer Details ( Region: {zone === "total" ? "Total" : zone || "All Zones"} )
+Dealer Details (Zone: {zone === "total" ? "Total" : (zone || "All Zones")})
         {/* <button className="btn btn-primary p-2 " onClick={exportToCSV}>Export to CSV</button>  */}
         <div onClick={exportToCSV} className="excel_img_btn" ><img src={excel} /></div>
       </h4>

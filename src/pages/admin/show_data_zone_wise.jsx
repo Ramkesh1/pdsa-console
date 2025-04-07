@@ -41,10 +41,9 @@ const DealerDetailsPage = () => {
 
   // Retrieve fromdate and todate passed via state
   const stateDates = location.state || {};
-  useEffect(() => {
-    if (stateDates.fromdate) setFromDate(stateDates.fromdate);
-    if (stateDates.todate) setToDate(stateDates.todate);
-  }, [stateDates]);
+  // useEffect(() => {
+  
+  // }, [stateDates]);
 
   // Fetch dealer details with pagination and date filtering
   const fetchDealerDetails = async () => {
@@ -87,6 +86,8 @@ const DealerDetailsPage = () => {
 
   // Trigger data fetch on page load, date change, or pagination changes
   useEffect(() => {
+    if (stateDates.fromdate) setFromDate(stateDates.fromdate);
+    if (stateDates.todate) setToDate(stateDates.todate);
     fetchDealerDetails();
   }, [page, rowsPerPage]);
 
@@ -222,7 +223,9 @@ const DealerDetailsPage = () => {
           {/* <div onClick={Getdatetodata} className="sercah_icon_date"><img src={search} /></div> */}
         </div>
 
-        Dealer Details ( Region: {zone === "total" ? "Total" : zone || "All Zones"} )
+
+       Dealer Details (Zone: {zone === "total" ? "Total" : (zone || "All Zones")})
+
         {/* <button className="btn btn-primary p-2 " onClick={exportToCSV}>Export to CSV</button>  */}
         <div onClick={exportToCSV} className="excel_img_btn">
           <img src={excel} />
