@@ -29,8 +29,8 @@ const AdminDashboard = () => {
         setDashboardData({
           sentToday: response.data[0].today_video_send_count || 0,
           sentThisWeek: response.data[0].week_video_send_count || 0,
-          sentThisMonth: response.data[0].week_video_send_count || 0,
-          pendingSms: response.data[0].week_video_send_count || 0,
+          sentThisMonth: response.data[0].last_15_days_video_send_count || 0,
+          pendingSms: response.data[0].month_video_send_count || 0,
           sentTodayFeedback: response.data[0].today_video_send_count || 0,
           sentThisWeekFeedback: response.data[0].week_video_send_count || 0,
           sentThisMonthFeedback: response.data[0].week_video_send_count || 0,
