@@ -3,10 +3,9 @@ import { apiCall } from "../../services/authServieces";
 import { useLocation } from "react-router-dom";
 import "../../css/wb_template.css";
 import TablePagination from "@mui/material/TablePagination";
-import excel from '../../Assets/images/excel.png'
-import search from '../../Assets/images/search.png'
-import Loader from "../../components/Loader"
-
+import excel from "../../Assets/images/excel.png";
+import search from "../../Assets/images/search.png";
+import Loader from "../../components/Loader";
 
 const DealerDetailsPageregion = () => {
   const [data, setData] = useState([]);
@@ -23,8 +22,6 @@ const DealerDetailsPageregion = () => {
   const zone = queryParams.get("zone");
   const columnName = queryParams.get("columnName");
 
-
-
   const [isToDateEnabled, setIsToDateEnabled] = useState(false);
   const today = new Date();
   const todayString = today.toISOString().split("T")[0];
@@ -35,20 +32,17 @@ const DealerDetailsPageregion = () => {
   const handleFromDateChange = (e) => {
     const selectedFromDate = e.target.value;
     setFromDate(selectedFromDate);
-    setIsToDateEnabled(!!selectedFromDate); 
+    setIsToDateEnabled(!!selectedFromDate);
   };
 
   const handleToDateChange = (e) => {
     setToDate(e.target.value);
   };
 
-
-  
-
   // Retrieve fromdate and todate passed via state
   const stateDates = location.state || {};
   // useEffect(() => {
-   
+
   // }, [stateDates]);
 
   // Fetch all dealer details
@@ -56,29 +50,37 @@ const DealerDetailsPageregion = () => {
     setLoading(true);
     setError(null);
 
-    
-    try { 
+    try {
       const response = await apiCall({
-        endpoint: `admin/getDealerDetailsRegion?page=${page + 1}&limit=${rowsPerPage}`,
+        endpoint: `admin/getDealerDetailsRegion?page=${
+          page + 1
+        }&limit=${rowsPerPage}`,
         method: "post",
         payload: {
           region: zone,
           columnName: columnName, // Pass the zone as a query parameter,
           fromdate: fromdate,
-          todate: todate
-
-
+          todate: todate,
         },
       });
 
       setData(response.data || []);
-      
+
       const totalItems = response.total || 0; // Total items in the response
-      
 
       setTotalPages(totalItems || 0); // Calculate total pages based on data length
     } catch (err) {
       setError(err.response?.data?.message || "Failed to fetch data");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const Getdatetodata = async () => {
+    try {
+      setLoading(true);
+      fetchDealerDetails();
+    } catch (error) {
     } finally {
       setLoading(false);
     }
@@ -90,20 +92,16 @@ const DealerDetailsPageregion = () => {
     fetchDealerDetails();
   }, [page, rowsPerPage]);
 
-
   const handleChangePage = (event, newPage) => {
-    console.log('newPage: ', newPage);
+    console.log("newPage: ", newPage);
     setPage(newPage);
-
   };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
-    fetchDealerDetails()
+    fetchDealerDetails();
   };
-
-
 
   // Export data to CSV
   const exportToCSV = () => {
@@ -160,35 +158,45 @@ const DealerDetailsPageregion = () => {
     URL.revokeObjectURL(url); // Clean up the URL
   };
 
+  // utils.js
+  function formatDate(dateString) {
+    if (!dateString) return "N/A"; // अगर डेट null या undefined है
+    const dateObj = new Date(dateString);
+    if (isNaN(dateObj)) return "Invalid Date"; // अगर डेट वैलिड नहीं है
 
+    const day = String(dateObj.getDate()).padStart(2, "0");
+    const month = String(dateObj.getMonth() + 1).padStart(2, "0");
+    const year = dateObj.getFullYear();
 
-    // utils.js
- function formatDate(dateString) {
-  if (!dateString) return "N/A"; // अगर डेट null या undefined है
-  const dateObj = new Date(dateString);
-  if (isNaN(dateObj)) return "Invalid Date"; // अगर डेट वैलिड नहीं है
-
-  const day = String(dateObj.getDate()).padStart(2, "0");
-  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const year = dateObj.getFullYear();
-
-  return `${day}-${month}-${year}`; // DD-MM-YYYY फॉर्मेट
-}
-
+    return `${day}-${month}-${year}`; // DD-MM-YYYY फॉर्मेट
+  }
 
   return (
     <div className="Template_id_contian1">
       <h4 className="Head_titleTemplate">
         <div className="date_box date_box1">
-          <input type="date" className="date_box_input" value={fromdate}
-            onChange={handleFromDateChange}  min={twoMonthsAgoString} max={todayString} />
+          <input
+            type="date"
+            className="date_box_input"
+            value={fromdate}
+            onChange={handleFromDateChange}
+            min={twoMonthsAgoString}
+            max={todayString}
+          />
           To
-          <input type="date" className="date_box_input" value={todate}
-            onChange={handleToDateChange} disabled={!isToDateEnabled} min={fromdate}  max={todayString} />
-
+          <input
+            type="date"
+            className="date_box_input"
+            value={todate}
+            onChange={handleToDateChange}
+            disabled={!isToDateEnabled}
+            min={fromdate}
+            max={todayString}
+          />
+          <div onClick={Getdatetodata} className="sercah_icon_date">
+            <img src={search} />
+          </div>
         </div>
-
-
         {/* <div className="date-filters">
         <label>
           From Date:
@@ -208,15 +216,15 @@ const DealerDetailsPageregion = () => {
         </label>
      
       </div> */}
-
-Dealer Details (Zone: {zone === "total" ? "Total" : (zone || "All Zones")})
+        Dealer Details (Zone: {zone === "total" ? "Total" : zone || "All Zones"}
+        )
         {/* <button className="btn btn-primary p-2 " onClick={exportToCSV}>Export to CSV</button>  */}
-        <div onClick={exportToCSV} className="excel_img_btn" ><img src={excel} /></div>
+        <div onClick={exportToCSV} className="excel_img_btn">
+          <img src={excel} />
+        </div>
       </h4>
       <div className="Template_id_Card1">
         <div className="table_contain" id="tableContain">
-
-
           {/* <center> <h4>Region: {zone || "All Zones"}</h4></center> */}
 
           {loading && <Loader />}
@@ -251,7 +259,7 @@ Dealer Details (Zone: {zone === "total" ? "Total" : (zone || "All Zones")})
                       <td>{item.region}</td>
                       <td>{item.dealer_code}</td>
 
-                      <td> {formatDate(item.cdate)}   </td>
+                      <td> {formatDate(item.cdate)} </td>
                       <td>{item.ctime}</td>
                       <td>{item.dealer_name}</td>
                       <td>{item.network_type}</td>
@@ -273,10 +281,7 @@ Dealer Details (Zone: {zone === "total" ? "Total" : (zone || "All Zones")})
                 )}
               </tbody>
             </table>
-
           )}
-
-
         </div>
       </div>
       <TablePagination
