@@ -82,13 +82,22 @@ const DealerDetailsPage = () => {
       setLoading(false);
     }
   };
-
+  const Getdatetodata = async () => {
+    try {
+      setLoading(true);
+      fetchDealerDetails();
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to fetch data");
+    } finally {
+      setLoading(false);
+    }
+  };
   // Trigger data fetch on page load, date change, or pagination changes
   useEffect(() => {
     if (stateDates.fromdate) setFromDate(stateDates.fromdate);
     if (stateDates.todate) setToDate(stateDates.todate);
     fetchDealerDetails();
-  }, [page, rowsPerPage, fromdate, todate]);
+  }, [page, rowsPerPage]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -209,7 +218,9 @@ const DealerDetailsPage = () => {
           To
           <input type="date" className="date_box_input" value={todate}
            onChange={handleToDateChange} disabled={!isToDateEnabled} min={fromdate}  max={todayString}  />
-
+<div onClick={Getdatetodata} className="sercah_icon_date">
+            <img src={search} />
+          </div>
           {/* <div onClick={Getdatetodata} className="sercah_icon_date"><img src={search} /></div> */}
         </div>
 
